@@ -1,0 +1,5 @@
+Find the maximum sum of a contiguous subarray from a given array of integers.
+
+Constraints:
+1. 1 <= n <= 100,000
+2. -10^9 <= array[i] <= 10^9
