@@ -1,0 +1,22 @@
+Problem Specification
+Title: Find the Most Frequent Element
+Description
+You are given an array of integers. Your task is to determine the element that occurs most frequently. If there are multiple elements with the same maximum frequency, return the smallest one.
+
+Input Format
+The first line contains a single integer, N (1 ≤ N ≤ 100,000) — the size of the array.
+The second line contains N space-separated integers A[i] (-10^6 ≤ A[i] ≤ 10^6).
+Output Format
+A single integer, the most frequently occurring element in the array.
+Constraints
+1 ≤ N ≤ 100,000
+-10^6 ≤ A[i] ≤ 10^6
+Sample Input
+Copy code
+7
+1 3 2 1 3 1 2
+Sample Output
+Copy code
+1
+Explanation
+The element 1 occurs 3 times, which is more than any other number. Although 3 and 2 also occur multiple times, 1 is the smallest element with the maximum frequency.
