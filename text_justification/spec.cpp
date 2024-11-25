@@ -16,7 +16,7 @@ protected:
     }
 
     void OutputFormat() {
-        LINES(result % SIZE(1, 300));
+        LINES(result);
     }
 
     void GradingConfig() {
