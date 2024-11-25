@@ -11,12 +11,12 @@ protected:
     vector<string> result;
 
     void InputFormat() {
-        LINE(words % SIZE(1, 300));
+        LINE(words); // Removed SIZE from LINE as it's not valid for LINE.
         LINE(maxWidth);
     }
 
     void OutputFormat() {
-        LINES(result);
+        LINES(result); // LINES automatically handles multiple lines of output.
     }
 
     void GradingConfig() {
