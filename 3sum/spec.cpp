@@ -11,7 +11,7 @@ protected:
     }
 
     void OutputFormat() {
-        LINES(res);
+        LINES(res % SIZE(res.size(), 3));
     }
 
     void Constraints() {
