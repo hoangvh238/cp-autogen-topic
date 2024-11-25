@@ -1,26 +1,36 @@
-#include "tcframe/spec.hpp"
+#include <bits/stdc++.h>
+#include <tcframe/spec.hpp>
+
+using namespace std;
 using namespace tcframe;
 
 class ProblemSpec : public BaseProblemSpec {
 protected:
+    int N;
     vector<int> nums;
-    vector<vector<int>> res;
+    vector<vector<int>> result;
 
     void InputFormat() {
-        LINE(nums);
+        LINE(N);
+        LINE(nums % SIZE(N));
     }
 
     void OutputFormat() {
-        LINES(res % SIZE(res.size(), 3));
+        LINES(result);
+    }
+
+    void GradingConfig() {
+        TimeLimit(1);
+        MemoryLimit(64);
     }
 
     void Constraints() {
-        CONS(3 <= nums.size() && nums.size() <= 3000);
-        CONS(eachElementInRange(nums, -100000, 100000));
+        CONS(3 <= N && N <= 3000);
+        CONS(eachElementBetween(nums, -100000, 100000));
     }
 
 private:
-    bool eachElementInRange(const vector<int>& v, int lo, int hi) {
+    bool eachElementBetween(const vector<int>& v, int lo, int hi) {
         for (int x : v) {
             if (x < lo || x > hi) {
                 return false;
@@ -33,49 +43,76 @@ private:
 class TestSpec : public BaseTestSpec<ProblemSpec> {
 protected:
     void SampleTestCase1() {
-        Input({"-1 0 1 2 -1 -4"});
-        Output({"-1 -1 2", "-1 0 1"});
+        Input({"6", "-1 0 1 2 -1 -4"});
+        Output({
+            "-1 -1 2",
+            "-1 0 1"
+        });
     }
 
     void SampleTestCase2() {
-        Input({"0 1 1"});
+        Input({"3", "0 1 1"});
         Output({});
     }
 
     void SampleTestCase3() {
-        Input({"0 0 0"});
-        Output({"0 0 0"});
+        Input({"3", "0 0 0"});
+        Output({
+            "0 0 0"
+        });
     }
 
-    void TestCases() {
-        CASE(nums = {-1, 0, 1, 2, -1, -4});
-        CASE(nums = {0, 1, 1});
-        CASE(nums = {0, 0, 0});
-        CASE(nums = {-100000, -100000, 200000});
-        CASE(nums = {1, 2, -3, 4, 5, -6});
-        CASE(nums = {0, 0, 0, 0, 0});
-        CASE(nums = {-1, -1, 2, 2, 0, 0});
-        CASE(nums = {3, -3, 0, 1, -1, -2, 2});
-        CASE(nums = {100000, -50000, -50000});
-        CASE(nums = generateArray(3000, -100000, 100000));
-        CASE(nums = generateArray(3000, -5, 5));
-        CASE(nums = generateArray(3, -100000, 100000));
-        CASE(nums = generateArray(100, -1000, 1000));
-        CASE(nums = generateArray(3000, -100000, 0));
-        CASE(nums = generateArray(3000, 0, 100000));
-        CASE(nums = generateArray(3000, -10, 10));
-        CASE(nums = {0, 0, 1, -1, 2, -2});
-        CASE(nums = {-1, 0, 1});
-        CASE(nums = {2, -1, -1, 1});
-        CASE(nums = {1, -1, 0, 0, 0});
+    void BeforeTestCase() {
+        nums.clear();
+        result.clear();
+    }
+
+    void TestGroup1() {
+        CASE(N = 6, nums = {-1, 0, 1, 2, -1, -4});
+        CASE(N = 3, nums = {0, 1, 1});
+        CASE(N = 3, nums = {0, 0, 0});
+    }
+
+    void TestGroup2() {
+        for (int i = 0; i < 5; i++) {
+            CASE(N = rnd.nextInt(3, 10), generateRandomArray(N, nums, -10, 10));
+        }
+    }
+
+    void TestGroup3() {
+        CASE(N = 3000, generateRandomArray(N, nums, -100000, 100000));
+    }
+
+    void TestGroup4() {
+        CASE(N = 3000, generateAllZerosArray(N, nums));
+    }
+
+    void TestGroup5() {
+        CASE(N = 3000, generateBalancedArray(N, nums, -100000, 100000));
     }
 
 private:
-    vector<int> generateArray(int size, int lo, int hi) {
-        vector<int> arr(size);
-        for (int i = 0; i < size; i++) {
-            arr[i] = rnd.nextInt(lo, hi);
+    void generateRandomArray(int n, vector<int>& arr, int lo, int hi) {
+        for (int i = 0; i < n; i++) {
+            arr.push_back(rnd.nextInt(lo, hi));
         }
-        return arr;
+    }
+
+    void generateAllZerosArray(int n, vector<int>& arr) {
+        arr.assign(n, 0);
+    }
+
+    void generateBalancedArray(int n, vector<int>& arr, int lo, int hi) {
+        int half = n / 2;
+        for (int i = 0; i < half; i++) {
+            arr.push_back(rnd.nextInt(lo, -1));
+        }
+        for (int i = 0; i < half; i++) {
+            arr.push_back(rnd.nextInt(1, hi));
+        }
+        if (n % 2 == 1) {
+            arr.push_back(0);
+        }
+        rnd.shuffle(arr.begin(), arr.end());
     }
 };
