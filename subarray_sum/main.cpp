@@ -3,7 +3,7 @@
 #include <climits>
 using namespace std;
 
-int minSubArrayLen(int target, vector<int>& nums) {
+int minSubArrayLen(int target, const vector<int>& nums) {
     int n = nums.size();
     int left = 0, sum = 0, minLength = INT_MAX;
 
