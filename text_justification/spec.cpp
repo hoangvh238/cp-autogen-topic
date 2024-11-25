@@ -11,12 +11,12 @@ protected:
     vector<string> res;
 
     void InputFormat() {
-        LINE(words % SIZE(1, 300));
+        LINE(words % SIZE(300));
         LINE(maxWidth);
     }
 
     void OutputFormat() {
-        LINES(res % SIZE(1, 100));
+        LINES(res % SIZE(100));
     }
 
     void Constraints() {
@@ -111,13 +111,14 @@ private:
     vector<string> generateRandomWords(int n, int minLength, int maxLength) {
         vector<string> result;
         for (int i = 0; i < n; i++) {
-            int len = rnd.nextInt(minLength, maxLength);
+            int len = rnd.nextInt(minLength, min(maxLength, maxWidth));
             string word(len, 'a');
             for (int j = 0; j < len; j++) {
-                word[j] = rnd.nextInt('a', 'z');
+                word[j] = rnd.nextInt('a', 'z'); 
             }
             result.push_back(word);
         }
         return result;
     }
+
 };
