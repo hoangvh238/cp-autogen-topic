@@ -11,7 +11,7 @@ protected:
     vector<string> result;
 
     void InputFormat() {
-        LINE(words % SIZE([&] { return words.size(); }));
+        LINE(words % SIZE([&words]() -> int { return static_cast<int>(words.size()); }));
         LINE(maxWidth);
     }
 
