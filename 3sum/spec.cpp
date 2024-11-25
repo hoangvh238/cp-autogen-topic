@@ -7,7 +7,7 @@ protected:
     vector<vector<int>> res;
 
     void InputFormat() {
-        LINE(nums % SIZE(3, 3000));
+        LINE(nums);
     }
 
     void OutputFormat() {
