@@ -11,7 +11,7 @@ protected:
     vector<string> result;
 
     void InputFormat() {
-        LINES(words) % SIZE(1, 300);
+        LINE(words % SIZE());
         LINE(maxWidth);
     }
 
@@ -19,26 +19,21 @@ protected:
         LINES(result);
     }
 
+    void GradingConfig() {
+        TimeLimit(1);
+        MemoryLimit(64);
+    }
+
     void Constraints() {
         CONS(1 <= words.size() && words.size() <= 300);
-        CONS(allElementsLengthBetween(words, 1, 20));
         CONS(1 <= maxWidth && maxWidth <= 100);
-        CONS(allWordsFitWidth(words, maxWidth));
+        CONS(eachWordValidLength(words, maxWidth));
     }
 
 private:
-    bool allElementsLengthBetween(const vector<string>& v, int lo, int hi) {
-        for (const string& word : v) {
-            if (word.length() < lo || word.length() > hi) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    bool allWordsFitWidth(const vector<string>& v, int maxWidth) {
-        for (const string& word : v) {
-            if (word.length() > maxWidth) {
+    bool eachWordValidLength(const vector<string>& words, int maxWidth) {
+        for (const string& word : words) {
+            if (word.size() > maxWidth) {
                 return false;
             }
         }
@@ -93,46 +88,40 @@ protected:
     }
 
     void TestGroup1() {
-        CASE(words = {"a"}, maxWidth = 1);
-        CASE(words = {"word", "word"}, maxWidth = 5);
-        CASE(words = {"word"}, maxWidth = 10);
-        CASE(words = {"single", "word", "line"}, maxWidth = 15);
-
-        for (int i = 0; i < 5; i++) {
-            CASE(words = randomWords(10, 20, 5), maxWidth = rnd.nextInt(10, 30));
-        }
+        CASE(words = {"a", "b", "c", "d"}, maxWidth = 1);
+        CASE(words = {"hello", "world"}, maxWidth = 10);
+        CASE(words = {"one", "longword", "word"}, maxWidth = 10);
     }
 
     void TestGroup2() {
-        CASE(words = vector<string>(300, "a"), maxWidth = 300);
-        CASE(words = vector<string>(100, "abc"), maxWidth = 50);
-
-        for (int i = 0; i < 5; i++) {
-            CASE(words = randomWords(300, 1, 20), maxWidth = rnd.nextInt(1, 100));
-        }
+        CASE(words = {"a", "b", "c", "d"}, maxWidth = 4);
+        CASE(words = {"short", "words", "only"}, maxWidth = 6);
+        CASE(words = {"singleword"}, maxWidth = 20);
     }
 
     void TestGroup3() {
-        CASE(words = {"a", "b", "c", "d"}, maxWidth = 1);
-        CASE(words = {"example", "for", "a", "single", "line"}, maxWidth = 25);
-        CASE(words = {"lorem", "ipsum", "dolor", "sit", "amet"}, maxWidth = 50);
+        CASE(words = generateRandomWords(10, 20), maxWidth = 15);
+        CASE(words = generateRandomWords(300, 1), maxWidth = 5);
+        CASE(words = generateRandomWords(200, 20), maxWidth = 100);
+    }
 
-        for (int i = 0; i < 5; i++) {
-            CASE(words = randomWords(50, 1, 20), maxWidth = rnd.nextInt(10, 50));
-        }
+    void TestGroup4() {
+        CASE(words = {"longword"}, maxWidth = 9);
+        CASE(words = {"edgecase"}, maxWidth = 8);
+        CASE(words = generateRandomWords(300, 10), maxWidth = 50);
     }
 
 private:
-    vector<string> randomWords(int count, int minLength, int maxLength) {
-        vector<string> result;
-        for (int i = 0; i < count; i++) {
-            int len = rnd.nextInt(minLength, maxLength);
-            string word(len, 'a');
+    vector<string> generateRandomWords(int n, int maxLength) {
+        vector<string> words;
+        for (int i = 0; i < n; i++) {
+            int len = rnd.nextInt(1, maxLength);
+            string word;
             for (int j = 0; j < len; j++) {
-                word[j] = 'a' + rnd.nextInt(0, 25);
+                word += char('a' + rnd.nextInt(0, 25));
             }
-            result.push_back(word);
+            words.push_back(word);
         }
-        return result;
+        return words;
     }
 };
