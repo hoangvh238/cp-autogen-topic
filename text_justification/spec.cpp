@@ -1,39 +1,38 @@
-#include <bits/stdc++.h>
 #include <tcframe/spec.hpp>
+#include <bits/stdc++.h>
 
 using namespace std;
 using namespace tcframe;
 
 class ProblemSpec : public BaseProblemSpec {
 protected:
-    int maxWidth;
     vector<string> words;
-    vector<string> result;
+    int maxWidth;
+    vector<string> res;
 
     void InputFormat() {
-        LINE(words); // Removed SIZE from LINE as it's not valid for LINE.
+        LINE(words % SIZE(1, 300));
         LINE(maxWidth);
     }
 
     void OutputFormat() {
-        LINES(result); // LINES automatically handles multiple lines of output.
-    }
-
-    void GradingConfig() {
-        TimeLimit(1);
-        MemoryLimit(64);
+        LINES(res % SIZE(1, 100));
     }
 
     void Constraints() {
         CONS(1 <= words.size() && words.size() <= 300);
-        CONS(allWordsValid(words));
         CONS(1 <= maxWidth && maxWidth <= 100);
+        CONS(validWords(words, maxWidth));
+    }
+
+    void Subtask1() {
+        Points(100);
     }
 
 private:
-    bool allWordsValid(const vector<string>& words) {
+    bool validWords(const vector<string>& words, int maxWidth) {
         for (const string& word : words) {
-            if (word.size() < 1 || word.size() > 20) {
+            if (word.size() > maxWidth || word.empty()) {
                 return false;
             }
         }
@@ -44,60 +43,81 @@ private:
 class TestSpec : public BaseTestSpec<ProblemSpec> {
 protected:
     void SampleTestCase1() {
+        Subtasks({1});
         Input({
-            R"(["This", "is", "an", "example", "of", "text", "justification."])",
+            "\"This\", \"is\", \"an\", \"example\", \"of\", \"text\", \"justification.\"",
             "16"
         });
         Output({
-            R"(["This    is    an", "example  of text", "justification.  "])"
+            "\"This    is    an\"",
+            "\"example  of text\"",
+            "\"justification.  \""
         });
     }
 
     void SampleTestCase2() {
+        Subtasks({1});
         Input({
-            R"(["What", "must", "be", "acknowledgment", "shall", "be"])",
+            "\"What\", \"must\", \"be\", \"acknowledgment\", \"shall\", \"be\"",
             "16"
         });
         Output({
-            R"(["What   must   be", "acknowledgment  ", "shall be        "])"
+            "\"What   must   be\"",
+            "\"acknowledgment  \"",
+            "\"shall be        \""
         });
     }
 
     void SampleTestCase3() {
+        Subtasks({1});
         Input({
-            R"(["Science", "is", "what", "we", "understand", "well", "enough", "to", "explain", "to", "a", "computer.", "Art", "is", "everything", "else", "we", "do"])",
+            "\"Science\", \"is\", \"what\", \"we\", \"understand\", \"well\", \"enough\", \"to\", \"explain\", \"to\", \"a\", \"computer.\", \"Art\", \"is\", \"everything\", \"else\", \"we\", \"do\"",
             "20"
         });
         Output({
-            R"(["Science  is  what we", "understand      well", "enough to explain to", "a  computer.  Art is", "everything  else  we", "do                  "])"
+            "\"Science  is  what we\"",
+            "\"understand      well\"",
+            "\"enough to explain to\"",
+            "\"a  computer.  Art is\"",
+            "\"everything  else  we\"",
+            "\"do                  \""
         });
     }
 
     void BeforeTestCase() {
         words.clear();
-        result.clear();
+        res.clear();
     }
 
-    void TestCases() {
-        CASE(words = generateWords(5, 5), maxWidth = 20);
-        CASE(words = generateWords(300, 10), maxWidth = 50);
-        CASE(words = generateWords(300, 20), maxWidth = 100);
-        CASE(words = {"longword1", "longword2", "longword3"}, maxWidth = 30);
-        CASE(words = {"singleword"}, maxWidth = 10);
-        CASE(words = generateWords(300, 1), maxWidth = 1);
+    void TestGroup1() {
+        Subtasks({1});
+        CASE(words = {"This", "is", "a", "test"}, maxWidth = 10);
+        CASE(words = {"This", "is", "another", "test", "case", "to", "verify"}, maxWidth = 20);
+        CASE(words = {"word", "that", "fits"}, maxWidth = 15);
+        CASE(words = generateRandomWords(10, 5, 50), maxWidth = 20);
+        CASE(words = generateRandomWords(300, 1, 100), maxWidth = 100);
+    }
+
+    void TestGroup2() {
+        Subtasks({1});
+        CASE(words = {"short", "test", "line"}, maxWidth = 5);
+        CASE(words = {"a", "single", "longword"}, maxWidth = 10);
+        CASE(words = generateRandomWords(100, 5, 10), maxWidth = 8);
+        CASE(words = generateRandomWords(50, 1, 20), maxWidth = 15);
+        CASE(words = generateRandomWords(300, 1, 15), maxWidth = 15);
     }
 
 private:
-    vector<string> generateWords(int n, int maxLength) {
-        vector<string> words;
+    vector<string> generateRandomWords(int n, int minLength, int maxLength) {
+        vector<string> result;
         for (int i = 0; i < n; i++) {
-            int len = rnd.nextInt(1, maxLength);
+            int len = rnd.nextInt(minLength, maxLength);
             string word(len, 'a');
-            for (char& c : word) {
-                c = 'a' + rnd.nextInt(0, 25);
+            for (int j = 0; j < len; j++) {
+                word[j] = rnd.nextInt('a', 'z');
             }
-            words.push_back(word);
+            result.push_back(word);
         }
-        return words;
+        return result;
     }
 };
