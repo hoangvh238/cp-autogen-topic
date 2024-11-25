@@ -11,7 +11,7 @@ protected:
     vector<string> result;
 
     void InputFormat() {
-        LINE(words % SIZE());
+        LINE(words % SIZE([&] { return words.size(); }));
         LINE(maxWidth);
     }
 
